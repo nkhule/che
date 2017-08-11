@@ -12,7 +12,7 @@ You can use siege tool for query performance test.
 Siege installation and configuration document can be found here -
 http://techieroop.com/siege-a-simple-load-testing-and-benchmarking-tool/#.Vas85flF76A
 
-Run a query tests on elasticsearch-
+Run query tests on elasticsearch-
 1. Add query in siege urls.txt. Path for file can be found using following command- 
     $siege --config   
    Default path-/usr/local/etc/urls.txt
@@ -23,7 +23,7 @@ http://ES-node-IP:9200/search-2f65f08d-36af-4753-b169-eda8f8a6f0ab/_search POST 
 
 You can add multiple queries in file, to run multiple queries.
 
-2. Run query test using siege
+2. Run test using siege-
 
 siege -c30 -t 50m -m test1
 
