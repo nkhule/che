@@ -5,4 +5,4 @@ e.g To add a data node in a devx cluster
 
 Update tf-as-elasticsearch-5x/profiles/devx.tfvars file for a data_count value:
 
-'data_count="6"'
+data_count="6"
