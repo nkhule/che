@@ -32,8 +32,8 @@ Edit tf-as-elasticsearch-5x/profiles/devx.tfvars file for a data_count value:
 
 data_count="6"
 
-#IMPORTANT- Following things need to be considered before adding nodes in a cluster-
-## Disable shard re-balancing on newly added node
+#### IMPORTANT- Following things needs to be considered before adding nodes in a cluster-
+## Disable shard re-balancing in a cluster for newly added node
 By default , elasticsearch does shard re-balancing across the nodes. It means whenever new node is added elasticsearch starts re-balancing of shards in a cluster, to make shards equally distributed across the data-nodes.  
 
 If we are having high load at the time of adding node, we can disable the shard re-balancing by using following api from any of the cluster nodes-
@@ -50,7 +50,7 @@ Settings updated can either be persistent (applied cross restarts) or transient 
 More about cluster update settings can be found here- https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html
 
 ## Enable default shard rebalancing-
-Once you see cluster is back to normal load or minimal load, you can enable re-balancing of shards for newly added node by hitting api from any of the cluster nodes as follows -
+Once you see cluster is back to normal load or minimal load, you can enable re-balancing of shards in a cluster for newly added node by hitting the api from any of the cluster nodes as follows -
 
 curl -XPUT 'localhost:9200/_cluster/settings' -d'
 {
@@ -58,6 +58,7 @@ curl -XPUT 'localhost:9200/_cluster/settings' -d'
         "cluster.routing.rebalance.enable" : null
     }
 }'
+(This will reset to default i.e. rebalance "all")
 
 OR
 
@@ -68,6 +69,41 @@ curl -XPUT 'localhost:9200/_cluster/settings' -d'
     }
 }'
 
-(Note- If we do not enable the cluster re-balance, shards allocation will not be balanced in a cluster. Newly added nodes will not contain shards for old indices.)
+(Note- If we do not enable the cluster re-balance, shards will not be balanced in a cluster. Newly added nodes will not contain shards for old indices.)
+
+## Check Number of nodes in a cluster-
+#### ES API -
+curl http://localhost:9200/_cat/nodes?v
+
+#### Grafana dashboard- Analytics Elasticsearch-5.x
+Check graphana chart from dashboard- Active nodes
+
+## Check cluster settings-
+#### ES API -
+curl localhost:9200/_cluster/settings?pretty
+
+## Check shards allocated to nodes- 
+#### ES API-
+curl localhost:9200/_cat/allocation?v
+
+## Check current shard re-allocation-
+#### ES API-
+curl localhost:9200/_cluster/health?pretty
+
+#### Grafana dashboard- Analytics Elasticsearch-5.x
+Check chart- #Relocated shards  
+
+## Cluster monitoring using grafana-
+#### Grafana dashboard- Analytics Elasticsearch-5.x
+Check charts- 
+1. Cluster status(0- Green, 1- Yellow, 2- Red)
+1. CPU Used percent
+1. JVM Heap Used %
+1. JVM GC Time
+1. Disk IOPS per node
+1. Segment count per minutes / node 
+1. Thread Pool Rejected
+    
+
 
 
