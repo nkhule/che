@@ -34,7 +34,9 @@ data_count="6"
 
 # Disable shard rebalancing on newly added node
 By default , elasticsearch does shard balancing across the nodes.
+
 If we are having high load at the time of adding node, we can disable the shard re-balancing by using following api from any of the cluster nodes-
+
 curl -XPUT 'localhost:9200/_cluster/settings' -d'
 {
     "transient" : {
@@ -47,13 +49,16 @@ More about cluster update settings can be found here- https://www.elastic.co/gui
 
 # Enable default shard rebalancing-
 Once you see cluster is back to normal load or minimal load, you can enable re-balancing of shards for newly added node by hitting api from any of the cluster nodes as follows -
+
 curl -XPUT 'localhost:9200/_cluster/settings' -d'
 {
     "transient" : {
         "cluster.routing.rebalance.enable" : null
     }
 }'
+
 OR
+
 curl -XPUT 'localhost:9200/_cluster/settings' -d'
 {
     "transient" : {
