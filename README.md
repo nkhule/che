@@ -32,8 +32,9 @@ Edit tf-as-elasticsearch-5x/profiles/devx.tfvars file for a data_count value:
 
 data_count="6"
 
-# Disable shard rebalancing on newly added node
-By default , elasticsearch does shard balancing across the nodes.
+#IMPORTANT- Following things need to be considered before adding nodes in a cluster-
+## Disable shard re-balancing on newly added node
+By default , elasticsearch does shard re-balancing across the nodes. It means whenever new node is added elasticsearch starts re-balancing of shards in a cluster, to make shards equally distributed across the data-nodes.  
 
 If we are having high load at the time of adding node, we can disable the shard re-balancing by using following api from any of the cluster nodes-
 
@@ -44,10 +45,11 @@ curl -XPUT 'localhost:9200/_cluster/settings' -d'
     }
 }'
 
-Settings updated can either be persistent (applied cross restarts) or transient (will not survive a full cluster restart)
+Settings updated can either be persistent (applied cross restarts) or transient (will not survive a full cluster restart).
+
 More about cluster update settings can be found here- https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html
 
-# Enable default shard rebalancing-
+## Enable default shard rebalancing-
 Once you see cluster is back to normal load or minimal load, you can enable re-balancing of shards for newly added node by hitting api from any of the cluster nodes as follows -
 
 curl -XPUT 'localhost:9200/_cluster/settings' -d'
@@ -66,5 +68,6 @@ curl -XPUT 'localhost:9200/_cluster/settings' -d'
     }
 }'
 
+(Note- If we do not enable the cluster re-balance, shards allocation will not be balanced in a cluster. Newly added nodes will not contain shards for old indices.)
 
 
