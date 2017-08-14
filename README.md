@@ -23,5 +23,43 @@ siege -c30 -t 50m -m test1
 ##### -m –mark=”text” MARK, mark the log file with a string separator
 
 
+# Add data node in a cluster
+Update data nodes count in a ES cluster's environment tfvars file.
+
+For e.g add a data node in a devx cluster
+
+Edit tf-as-elasticsearch-5x/profiles/devx.tfvars file for a data_count value:
+
+data_count="6"
+
+# Disable shard rebalancing on newly added node
+By default , elasticsearch does shard balancing across the nodes.
+If we are having high load at the time of adding node, we can disable the shard re-balancing by using following api from any of the cluster nodes-
+curl -XPUT 'localhost:9200/_cluster/settings' -d'
+{
+    "transient" : {
+        "cluster.routing.rebalance.enable" : "none"
+    }
+}'
+
+Settings updated can either be persistent (applied cross restarts) or transient (will not survive a full cluster restart)
+More about cluster update settings can be found here- https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html
+
+# Enable default shard rebalancing-
+Once you see cluster is back to normal load or minimal load, you can enable re-balancing of shards for newly added node by hitting api from any of the cluster nodes as follows -
+curl -XPUT 'localhost:9200/_cluster/settings' -d'
+{
+    "transient" : {
+        "cluster.routing.rebalance.enable" : null
+    }
+}'
+OR
+curl -XPUT 'localhost:9200/_cluster/settings' -d'
+{
+    "transient" : {
+        "cluster.routing.rebalance.enable" : "all"
+    }
+}'
+
 
 
